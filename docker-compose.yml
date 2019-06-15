@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: bash -c "sleep 50"
+    # ports:
+    #   - "5555:5555"
