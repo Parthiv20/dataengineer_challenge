@@ -2,6 +2,9 @@ version: '3'
 services:
   web:
     build: .
-    command: bash -c "python3 clip_sharpen.py"
+    volumes:
+      - ./:/code
+    # command: bash -c "sleep 5000"
+    command: bash -c "python3 clip_sharpen.py FCGC600435537/IMG_PHR1B_PMS-N_001/IMG_PHR1B_PMS-N_201701061026046_PRJ_2137552101-001_R1C1.TIF"
     # ports:
     #   - "5555:5555"
