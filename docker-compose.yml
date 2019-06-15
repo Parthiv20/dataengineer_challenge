@@ -2,6 +2,6 @@ version: '3'
 services:
   web:
     build: .
-    command: bash -c "sleep 50"
+    command: bash -c "python3 clip_sharpen.py"
     # ports:
     #   - "5555:5555"
