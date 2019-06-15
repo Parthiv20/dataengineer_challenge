@@ -1,2 +1,5 @@
 # dataengineer_challenge
-## Clip and Sharpen 
+
+## Clip and Sharpen
+
+### Data
