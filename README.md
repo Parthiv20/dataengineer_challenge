@@ -19,14 +19,19 @@
  * The downloded compressed file should be saved at base directory of this repo
  * Then extract the compressed file
  * If every thing goes well, There should be new directory with name FCGC600435537
- * On my machine the path for the image is ```/FCGC600435537/IMG_PHR1B_PMS-N_001```
+ * On my machine repo directory structure is
+   *  image path ```/dataengineer_challenge/FCGC600435537/IMG_PHR1B_PMS-N_001```
+   *  clip_sharp container contents  contents ```/dataengineer_challenge/clip_sharp```
+   *  result path ```/dataengineer_challenge/results```
+   *  jupyter container contents ```/dataengineer_challenge/jupyter```
+
 
 ### Commands
 
 * First run ```docker-compose build``` it takes a while. As it needs to pull the base images from docker hub
 * Once build is successful, then run ```docker-compose up```
 * The above command runs and tests the application.
-* If Every thing goes well, clipped.tif and sharpened.tif should be created at ```/FCGC600435537/IMG_PHR1B_PMS-N_001```
-* Prient screens of clip and shparpened images can be found at ```/results```
+* If every thing goes well, clipped.tif and sharpened.tif should be created at ```/FCGC600435537/IMG_PHR1B_PMS-N_001```
+* Print screens of clip and shparpened images can be found at ```/results```
 
 ### Jupyter
