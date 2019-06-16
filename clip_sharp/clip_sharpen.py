@@ -102,7 +102,7 @@ def sharpen(clip_img):
     img = cv2.imread(clip_img, cv2.IMREAD_GRAYSCALE)
     laplacian = cv2.Laplacian(img,cv2.CV_32F,ksize=5)
     sharpen=("/").join(clip_img.split("/")[:-1])+"/sharpened.tif"
-    sharpen_png=("/").join(clip_img.split("/")[:-1])+"/sharpened.tif"
+    sharpen_png=("/").join(clip_img.split("/")[:-1])+"/sharpened.png"
     cv2.imwrite(sharpen, laplacian)
     cv2.imwrite(sharpen_png, laplacian)
 
