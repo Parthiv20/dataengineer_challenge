@@ -115,7 +115,7 @@ def sharpen(clip_img):
             with rasterio.open(sharpen_geo, 'w', **metadata) as dst:
                 dst.write(sharp.read())
 
-    print("Image sharpening is successful")
+    print("Image sharpening is successful and output path is "+sharpen_geo)
 
 def tests(img1, img2, img3):
     """Fucntion to test the clip and sharp
