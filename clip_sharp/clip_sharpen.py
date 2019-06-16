@@ -70,6 +70,10 @@ def clip(img):
         out_tif=("/").join(img.split("/")[:-1])+"/clipped.tif"
 
         with rasterio.open(out_tif, "w", **out_meta) as dest:
+            print("******************************")
+            print(dest.crs)
+            dest.crs = rasterio.crs.CRS({"init": "epsg:32633"})
+            print(dest.crs)
             dest.write(out_img)
 
         print("Raster clip is successful and store at"+out_tif)
@@ -78,9 +82,20 @@ def sharpen(clip_img):
     """Function to sharpen the image. It uses laplacian filter"""
 
     img = cv2.imread(clip_img, cv2.IMREAD_GRAYSCALE)
-    laplacian = cv2.Laplacian(img, cv2.CV_64F, ksize=5)
-    sharpen=("/").join(clip_img.split("/")[:-1])+"/sharpened.png"
+    laplacian = cv2.Laplacian(img,cv2.CV_32F,ksize=5)
+    sharpen=("/").join(clip_img.split("/")[:-1])+"/sharpened.tif"
     cv2.imwrite(sharpen, laplacian)
+
+    sharpen_geo=("/").join(clip_img.split("/")[:-1])+"/sharpened_geo.tif"
+
+    with rasterio.open(clip_img) as src:
+        with rasterio.open(sharpen) as sharp:
+            metadata= sharp.meta
+            metadata["transform"]=src.meta.pop("transform")
+            metadata["crs"]=src.meta.pop("crs")
+            with rasterio.open(sharpen_geo, 'w', **metadata) as dst:
+                dst.write(sharp.read())
+
 
     print("Clipped image sharpen successful")
 
