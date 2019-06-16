@@ -35,3 +35,4 @@
 * Print screens of clip and shparpened images can be found at ```/results```
 
 ### Jupyter
+* Please find jupyter notebook at ```dataengineer_challenge/jupyter/jupyter.ipynb```
