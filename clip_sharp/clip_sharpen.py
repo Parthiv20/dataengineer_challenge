@@ -117,6 +117,31 @@ def sharpen(clip_img):
 
     print("Image sharpening is successful")
 
+def tests(img1, img2, img3):
+    """Fucntion to test the clip and sharp
+
+    Parameters:
+    img1 (str): path to input satellite image
+    img2 (str): path to clipped image
+    img3 (str): path to sharpened image
+
+    Returns:
+    Nothing
+    """
+    with rasterio.open(img1) as src:
+        with rasterio.open(img2) as clip:
+            with rasterio.open(img3) as sharp:
+                # clipped image must have smaller dimensions than input image
+                if src.height > clip.height and src.width > clip.width:
+                    print("clip test passed")
+                else:
+                    print("clip test is failed")
+                # sharpened image must have single band and float 32 type
+                if sharp.count == 1 and sharp.dtypes[0] == 'float32':
+                    print("sharpen test is passed")
+                else:
+                    print("sharpen test is failed")
+
 def main(argv):
 
     img = argv[0]
@@ -128,6 +153,10 @@ def main(argv):
     clip_path = ("/").join(img.split("/")[:-1])+"/clipped.tif"
 
     sharpen(clip_path)
+
+    sharp_geo = ("/").join(img.split("/")[:-1])+"/sharpened_geo.tif"
+
+    tests(img, clip_path, sharp_geo)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
