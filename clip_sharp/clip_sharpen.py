@@ -1,13 +1,13 @@
+import os
+import sys
 import time
+import cv2
 import rasterio
 import pyproj
 import numpy as np
-import cv2
 import pycrs
-import os
 import geopandas as gpd
 import json
-import sys
 
 from rasterio.plot import show
 from rasterio.mask import mask
@@ -22,20 +22,34 @@ def getFeatures(gdf):
 
 
 def img_check(img):
-    """Fucntion to check input image is valid and it has valid CRS"""
+    """Fucntion to check input image is valid and it has valid CRS
+
+    Parameters:
+    img (str): path to satellite image
+
+    Returns:
+    Nothing
+    """
     with rasterio.open(img) as src:
         if src.crs.is_valid and src.crs.is_projected and src.crs.is_epsg_code:
-            print("Input raster has valid CRS")
+            print("Input raster is valid and has valid CRS")
         else:
             print("Input raster does not have valid CRS. Exiting the script")
             # exiting from script
             sys.exit()
 
 def clip(img):
-    """ Fuction to clip the projected raster"""
+    """Fucntion to subset the projected raster with hardcoded coordinates
 
+    Parameters:
+    img (str): path to satellite image
+
+    Returns:
+    Nothing
+    """
     with rasterio.open(img) as src:
 
+        # Ref:https://automating-gis-processes.github.io/CSC18/lessons/L6/clipping-raster.html
         # WGS84 coordinates collected for small part of venice city
         minx, miny = 12.35, 45.44
         maxx, maxy = 12.36, 45.42
@@ -54,7 +68,6 @@ def clip(img):
         # Clip the raster with Polygon
         out_img, out_transform = mask(dataset=src, shapes=coords, crop=True)
 
-        # Copy the metadata
         out_meta = src.meta.copy()
 
         # Parse EPSG code
@@ -70,17 +83,22 @@ def clip(img):
         out_tif=("/").join(img.split("/")[:-1])+"/clipped.tif"
 
         with rasterio.open(out_tif, "w", **out_meta) as dest:
-            print("******************************")
-            print(dest.crs)
             dest.crs = rasterio.crs.CRS({"init": "epsg:32633"})
-            print(dest.crs)
             dest.write(out_img)
 
-        print("Raster clip is successful and store at"+out_tif)
+        print("Clipping is successful and ouput path is "+out_tif)
 
 def sharpen(clip_img):
-    """Function to sharpen the image. It uses laplacian filter"""
+    """Fucntion to sharpen the image using high pass filter and add crs to it
 
+    Parameters:
+    clip_img (str): path to clipped image
+
+    Returns:
+    Nothing
+    """
+
+    # Sharpen the clip image with opencv laplacian function
     img = cv2.imread(clip_img, cv2.IMREAD_GRAYSCALE)
     laplacian = cv2.Laplacian(img,cv2.CV_32F,ksize=5)
     sharpen=("/").join(clip_img.split("/")[:-1])+"/sharpened.tif"
@@ -88,6 +106,7 @@ def sharpen(clip_img):
 
     sharpen_geo=("/").join(clip_img.split("/")[:-1])+"/sharpened_geo.tif"
 
+    # Creating georeferenced sharpen image
     with rasterio.open(clip_img) as src:
         with rasterio.open(sharpen) as sharp:
             metadata= sharp.meta
@@ -96,9 +115,7 @@ def sharpen(clip_img):
             with rasterio.open(sharpen_geo, 'w', **metadata) as dst:
                 dst.write(sharp.read())
 
-
-    print("Clipped image sharpen successful")
-
+    print("Image sharpening is successful")
 
 def main(argv):
 
@@ -111,7 +128,6 @@ def main(argv):
     clip_path = ("/").join(img.split("/")[:-1])+"/clipped.tif"
 
     sharpen(clip_path)
-
 
 if __name__ == "__main__":
     main(sys.argv[1:])
