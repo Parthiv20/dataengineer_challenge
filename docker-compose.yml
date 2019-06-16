@@ -1,0 +1,16 @@
+version: '3'
+services:
+  clip_sharp:
+    build: './clip_sharp'
+    volumes:
+      - ./:/code
+    # command: bash -c "sleep 5000"
+    command: bash -c "python3 clip_sharp/clip_sharpen.py FCGC600435537/IMG_PHR1B_PMS-N_001/IMG_PHR1B_PMS-N_201701061026046_PRJ_2137552101-001_R1C1.TIF"
+
+  jupyter:
+    build: './jupyter'
+    volumes:
+      - ./:/code
+    ports:
+      - "8888:8888"
+    # command: bash -c "sleep 5000"
